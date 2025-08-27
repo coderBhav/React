@@ -14,8 +14,8 @@
     margin: 10px;
     padding: 10px;
 }
-.search{
-    padding: 4px;
+.container{
+    margin-top: 0.5rem;
 }
 .res-cards{
     padding: 5px;
@@ -35,4 +35,9 @@
 .res-container{
     display:flex;
     flex-wrap: wrap;
+}
+.cuisines{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

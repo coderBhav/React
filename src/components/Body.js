@@ -2,10 +2,8 @@ import RestaurantCard from "./RestaurantCard";
 import { resList } from "../utils/mockData";
 const Body=()=>{
     return(
-        <div className="body">
-            <div className="search">
-                Search
-            </div>
+        <div className="container">
+            <input className="text" type="text" placeholder="Search for restaurant, cuisines, Food"/>
             <div className="res-container">
                 {
                     resList.map((restaurant)=>(
