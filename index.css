@@ -23,7 +23,7 @@
 }
 .res-cards{
     padding: 5px;
-    width: 220px;
+    width: 200px;
     height: 450px;
     background-color: rgb(221, 216, 216);
     margin: 5px;
@@ -34,7 +34,7 @@
 }
 .im{
     width:100%;
-    height: 200px;
+    height: 150px;
 }
 .res-container{
     display:flex;
@@ -52,4 +52,15 @@
 }
 .res-name{
     font-weight: 800;
+}
+.cards-container{
+    display:flex;
+    flex-wrap: wrap;
+}
+.card{
+    padding: 5px;
+    width: 200px;
+    height: 450px;
+    background-color: rgb(221, 216, 216);
+    margin: 5px;
 }
