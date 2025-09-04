@@ -1,7 +1,7 @@
 import RestaurantCard from "./RestaurantCard";
-import {resList} from "../utils/mockData";
 import { useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
+import useCheckOnline from "../utils/useCheckOnline";
 const Body=()=>{
     // local state-variable
     const [topResList,settopResList]=useState([]);
@@ -13,10 +13,19 @@ const Body=()=>{
     const getData=async()=>{
         const data=await fetch("https://www.swiggy.com/dapi/restaurants/list/v5?lat=21.99740&lng=79.00110&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING");
         const getJson=await data.json();
-        settopResList(getJson?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants); 
-        setCopy(getJson?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants); 
+        const cards = getJson?.data?.cards || [];
+        const restaurantsCard = cards.find(
+            (c) => c?.card?.card?.gridElements?.infoWithStyle?.restaurants
+        );
+        const restaurants = restaurantsCard?.card?.card?.gridElements?.infoWithStyle?.restaurants || [];
+        settopResList(restaurants);
+        setCopy(restaurants);
     };
-    return topResList.length==0 ? (
+const getStatus=useCheckOnline();
+if(!getStatus)
+    return <h1>You are offline</h1>
+else{
+    return topResList.length===0 ? (
         <Shimmer/>
     ):(
         <div className="container">
@@ -34,6 +43,10 @@ const Body=()=>{
                     const topRes=topResList.filter((res)=>res.info.avgRating>4);
                     settopResList(topRes);
                 }}>Top Restaurants</button>
+            <div className="top-div">
+                <h1 className="top-name">Top restaurant chains in Chhindwara</h1>
+                <button className="r-btn">right</button>
+            </div>
             <div className="res-container">
                 {
                     Copy.map((restaurant)=>(
@@ -42,6 +55,7 @@ const Body=()=>{
                 }
             </div>
         </div>
-    )
+    );
+}
 };
 export default Body;
