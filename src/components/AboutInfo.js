@@ -3,11 +3,6 @@ class AboutInfo extends React.Component{
     constructor(props){
         super(props);
     }
-    async componentDidMount(){
-        const data=await fetch("https://api.github.com/users/coderBhav");
-        const json=await data.json();
-        console.log(json);
-    }
     render(){
         const {name, location}=this.props;
         return(

@@ -1,74 +1,33 @@
 import Shimmer from "./Shimmer";
 import { useParams } from "react-router-dom";
 import useRestaurantMenu from "../utils/useRestaurantMenu";
+import CategoryMenu from "./CategoryMenu";
 
 const RestaurantMenu = () => {
   const { resId } = useParams();
   const resinfo = useRestaurantMenu(resId);
-
   if (!resinfo) return <Shimmer />;
 
-  const itemCards =
-    resinfo?.cards?.[5]?.groupedCard?.cardGroupMap?.REGULAR?.cards?.[2]?.card
-      ?.card?.itemCards;
-
-  if (!itemCards || itemCards.length === 0) {
-    return (
-      <div className="text-center text-gray-600 mt-10 text-lg">
-        No menu items found 🍽️
-      </div>
-    );
-  }
-
+ const menuCategory = 
+  resinfo?.cards
+  ?.flatMap(c => c?.groupedCard?.cardGroupMap?.REGULAR?.cards || []) // sab cards collect karo
+  .filter(c => c?.card?.card?.["@type"] === "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory");
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
-      {/* Restaurant Name */}
-      <h2 className="text-3xl font-bold mb-6 text-gray-800 text-center">
-        Menu
-      </h2>
-
-      {/* Menu Items */}
-      <ul className="space-y-4">
-        {itemCards.map((item) => {
-          const { id, name, price, description, imageId, defaultPrice } =
-            item.card.info;
-
-          return (
-            <li
-              key={id}
-              className="flex justify-between items-center border-b pb-4"
-            >
-              {/* Left side: Info */}
-              <div>
-                <h3 className="text-lg font-semibold text-gray-800">
-                  {name}
-                </h3>
-                <p className="text-sm text-gray-500 mb-1">
-                  ₹{(price || defaultPrice) / 100}
-                </p>
-                {description && (
-                  <p className="text-sm text-gray-600">{description}</p>
-                )}
-              </div>
-
-              {/* Right side: Image + Button */}
-              {imageId && (
-                <div className="relative w-24 h-20">
-                  <img
-                    src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_200,h_150,c_fit/${imageId}`}
-                    alt={name}
-                    className="w-full h-full object-cover rounded-lg shadow"
-                  />
-                  <button className="absolute bottom-1 left-1/2 -translate-x-1/2 bg-white text-green-600 border border-green-500 px-3 py-1 text-sm rounded-md hover:bg-green-50">
-                    ADD +
-                  </button>
-                </div>
-              )}
-            </li>
-          );
-        })}
-      </ul>
+    <div className="flex flex-col max-w-3xl mx-auto px-4 py-8 space-y-8">
+      <h1 className="text-3xl font-extrabold">{resinfo?.cards?.[0]?.card?.card?.text}</h1>
+      <div className="flex flex-col gap-2 border-2 border-gray-200 h-auto p-4 rounded-2xl shadow-xl/30 shadow-gray-500">
+        <h1 className="font-bold">{resinfo?.cards?.[2]?.card?.card?.info?.avgRating} ({resinfo?.cards?.[2]?.card?.card?.info?.totalRatingsString}) • {resinfo?.cards?.[2]?.card?.card?.info?.costForTwoMessage}</h1>
+        <p className="font-bold text-orange-500 text-sm underline">{resinfo?.cards?.[2]?.card?.card?.info?.cuisines.join(",")}</p>
+        <div className="flex gap-4">
+          <p className="text-sm font-bold">Outlet</p>
+            <p className="text-sm text-gray-500">{resinfo?.cards?.[2]?.card?.card?.info?.areaName}</p>
+        </div>
+        <p className="text-sm font-bold">{resinfo?.cards?.[2]?.card?.card?.info?.sla?.slaString}</p>
+      </div>
+      <h1>Menu</h1>
+      <CategoryMenu data={menuCategory}/>
     </div>
+    
   );
 };
 

@@ -4,13 +4,12 @@ class About extends Component{
     constructor(props){
         super(props);
     }
-    componentDidMount(){
-    }
     render(){
         return(
         <div>
             <h1>About</h1>
             <AboutInfo name={"Mohit"} location={"Texas"}/>
+            <AboutInfo name={"Bhanu"} location={"Texas"}/>
         </div>
     );
     }
