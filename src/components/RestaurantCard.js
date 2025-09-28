@@ -13,11 +13,11 @@ const RestaurantCard = ({ resData }) => {
   const { slaString} = resData?.info?.sla || {}; 
   return (
     <Link to={`/restaurant/${id}`}className="block hover:scale-95 transition-transform duration-200">
-      <div className="bg-white rounded-2xl overflow-hidden w-72">
+      <div className="bg-white rounded-2xl overflow-hidden w-72 dark:bg-black">
         <img className="h-44 w-64 object-cover rounded-2xl" src={CDN_URL + cloudinaryImageId} alt={name}/>
           <div className="w-54 m-3">
-            <h3 className="text-lg font-bold truncate ">{name}</h3>
-            <h3 className="font-semibold">⭐{avgRating}{" "}• {slaString}</h3>
+            <h3 className="text-lg font-bold truncate dark:text-white">{name}</h3>
+            <h3 className="font-semibold dark:text-white">⭐{avgRating}{" "}• {slaString}</h3>
             <p className="font-medium text-gray-500 truncate">{cuisines.join(", ")}</p>
             <p className="font-medium text-gray-500 mt-1">{areaName}</p>
           </div>

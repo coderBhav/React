@@ -10,12 +10,12 @@ const Body = () => {
   const [api, setApi] = useState({});
   const [topResList, setTopResList] = useState([]);
   const [copy, setCopy] = useState([]);
-  const [type, setType] = useState("");
+  
   //console.log(swiggy);
 
   const DiscountCard = RestaurantCardWithHOC(RestaurantCard);
   useEffect(() => {
-    const data = swiggy; 
+    const data = swiggy;
     setApi(data);
 
     const cards = data?.data?.cards || [];
@@ -45,12 +45,12 @@ const Body = () => {
       {/* You can remove this button since no fetch retry is needed */}
     </div>
   ) : (
-    <div className="px-36 py-4">
+    <div className="px-36 py-4 dark:bg-black">
       <div className="mb-6">
         <Mind data={api} />
       </div>
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-extrabold font-sans">
+        <h1 className="text-xl font-extrabold font-sans dark:text-white">
           {api?.data?.cards?.[1]?.card?.card?.header?.title}
         </h1>
       </div>
