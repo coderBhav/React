@@ -8,6 +8,7 @@ const useRestaurantMenu=(resId)=>{
             const res = await fetch(`${MENU_URL}${resId}`);
             const data = await res.json();
             setResInfo(data?.data);
+            console.log(data);
         } catch (error) {
             console.error("Failed to fetch menu:", error);
         }

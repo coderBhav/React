@@ -1,33 +1,45 @@
-import Shimmer from "./Shimmer";
 import { useParams } from "react-router-dom";
-import useRestaurantMenu from "../utils/useRestaurantMenu";
+import { useState, useEffect } from "react";
+import Shimmer from "./Shimmer";
 import CategoryMenu from "./CategoryMenu";
 
 const RestaurantMenu = () => {
   const { resId } = useParams();
-  const resinfo = useRestaurantMenu(resId);
-  if (!resinfo) return <Shimmer />;
+  console.log(resId);
+  const [menuData, setMenuData] = useState(null);
 
- const menuCategory = 
-  resinfo?.cards
-  ?.flatMap(c => c?.groupedCard?.cardGroupMap?.REGULAR?.cards || []) // sab cards collect karo
-  .filter(c => c?.card?.card?.["@type"] === "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory");
+  useEffect(() => {
+    const fetchMenu = async () => {
+      try {
+        const res = await fetch(`/menus/menu_${resId}.json`);
+        console.log(res.status);
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        const data = await res.json();
+        setMenuData(data);
+
+      } catch (err) {
+        console.error("Error fetching menu:", err);
+      }
+    };
+    fetchMenu();
+  }, [resId]);
+
+  if (!menuData) return <Shimmer />;
+
   return (
-    <div className="flex flex-col dark:bg-black dark:shadow-amber-50">
-      <h1 className="text-3xl font-extrabold dark:text-white">{resinfo?.cards?.[0]?.card?.card?.text}</h1>
-      <div className="flex flex-col gap-2 border-2 border-gray-200 h-auto p-4 rounded-2xl shadow-xl/30 shadow-gray-500">
-        <h1 className="font-bold dark:text-white">{resinfo?.cards?.[2]?.card?.card?.info?.avgRating} ({resinfo?.cards?.[2]?.card?.card?.info?.totalRatingsString}) • {resinfo?.cards?.[2]?.card?.card?.info?.costForTwoMessage}</h1>
-        <p className="font-bold text-orange-500 text-sm underline">{resinfo?.cards?.[2]?.card?.card?.info?.cuisines.join(",")}</p>
-        <div className="flex gap-4">
-          <p className="text-sm font-bold dark:text-gray-500">Outlet</p>
-            <p className="text-sm text-gray-500">{resinfo?.cards?.[2]?.card?.card?.info?.areaName}</p>
-        </div> 
-        <p className="text-sm font-bold dark:text-white">{resinfo?.cards?.[2]?.card?.card?.info?.sla?.slaString}</p>
+    <div className="flex flex-col dark:bg-black dark:text-white">
+      <h1 className="text-3xl font-extrabold">{menuData.restaurantName}</h1>
+
+      {/* Example: Show some restaurant info */}
+      <div className="p-4 border-2 border-gray-200 rounded-2xl mb-4">
+        <p>Rating: {menuData.avgRating}</p>
+        <p>Cuisines: {menuData.cuisines.join(", ")}</p>
+        <p>Cost for Two: {menuData.costForTwo}</p>
       </div>
-      <h1 className="dark:text-white">Menu</h1>
-      <CategoryMenu data={menuCategory}/>
+
+      <h2 className="text-2xl font-bold mb-2">Menu</h2>
+      <CategoryMenu data={menuData.categories} />
     </div>
-    
   );
 };
 
